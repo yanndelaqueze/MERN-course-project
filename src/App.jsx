@@ -5,7 +5,7 @@ import {
   Redirect,
   Switch,
 } from "react-router-dom";
-import { Users } from "./user/pages/User";
+import { Users } from "./user/pages/Users";
 import { NewPlace } from "./places/pages/NewPlace";
 
 function App() {
