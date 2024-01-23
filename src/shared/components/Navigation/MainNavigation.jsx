@@ -11,11 +11,11 @@ import "./MainNavigation.css";
 export function MainNavigation({}) {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
 
-  function openDrawer() {
+  function openDrawerHandler() {
     setDrawerIsOpen(true);
   }
 
-  function closeDrawer() {
+  function closeDrawerHandler() {
     setDrawerIsOpen(false);
   }
   return (
@@ -23,22 +23,22 @@ export function MainNavigation({}) {
       {drawerIsOpen && (
         <Backdrop
           onClick={() => {
-            closeDrawer();
+            closeDrawerHandler();
           }}
         />
       )}
-      {drawerIsOpen && (
-        <SideDrawer>
-          <nav className="main-navigation__drawer-nav">
-            <NavLinks />
-          </nav>
-        </SideDrawer>
-      )}
+
+      <SideDrawer show={drawerIsOpen} onClick={closeDrawerHandler}>
+        <nav className="main-navigation__drawer-nav">
+          <NavLinks />
+        </nav>
+      </SideDrawer>
+
       <MainHeader>
         <button
           className="main-navigation__menu-btn"
           onClick={() => {
-            openDrawer();
+            openDrawerHandler();
           }}
         >
           <span />
