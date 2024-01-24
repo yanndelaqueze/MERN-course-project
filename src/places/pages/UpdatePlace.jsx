@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Input } from "../../shared/components/FormElements/Input";
 import { Button } from "../../shared/components/FormElements/Button";
+import { Card } from "../../shared/components/UIElements/Card";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -41,33 +42,64 @@ const DUMMY_PLACES = [
 ];
 
 export function UpdatePlace() {
+  const [isLoading, setIsLoading] = useState(true);
   const placeId = useParams().placeId;
+
+  const [formState, inputHandler, setFormData] = useForm(
+    {
+      title: {
+        value: "",
+        isValid: false,
+      },
+      description: {
+        value: "",
+        isValid: false,
+      },
+    },
+    false
+  );
 
   const identifiedPlace = DUMMY_PLACES.find((p) => p.id === placeId);
 
-  const [formState, inputHandler] = useForm(
-    {
-      title: {
-        value: identifiedPlace.title,
-        isValid: true,
-      },
-      description: {
-        value: identifiedPlace.description,
-        isValid: true,
-      },
-    },
-    true
-  );
+  useEffect(() => {
+    if (identifiedPlace) {
+      setFormData(
+        {
+          title: {
+            value: identifiedPlace.title,
+            isValid: true,
+          },
+          description: {
+            value: identifiedPlace.description,
+            isValid: true,
+          },
+        },
+        true
+      );
+    }
 
-  function placeUpdateSubmitHandler(event) {
+    setIsLoading(false);
+  }, [setFormData, identifiedPlace]);
+
+  const placeUpdateSubmitHandler = (event) => {
     event.preventDefault();
     console.log(formState.inputs);
-  }
+  };
 
   if (!identifiedPlace) {
     return (
       <div className="center">
-        <h2>Could not find place !!</h2>
+        <Card>
+          <h2>Could not find place!</h2>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="center">
+        <h2>Loading...</h2>
       </div>
     );
   }
@@ -80,7 +112,7 @@ export function UpdatePlace() {
         type="text"
         label="Title"
         validators={[VALIDATOR_REQUIRE()]}
-        errorText="Plaease enter a valid title."
+        errorText="Please enter a valid title."
         onInput={inputHandler}
         initialValue={formState.inputs.title.value}
         initialValid={formState.inputs.title.isValid}
@@ -90,7 +122,7 @@ export function UpdatePlace() {
         element="textarea"
         label="Description"
         validators={[VALIDATOR_MINLENGTH(5)]}
-        errorText="Plaease enter a valid description (5 characters min.)."
+        errorText="Please enter a valid description (min. 5 characters)."
         onInput={inputHandler}
         initialValue={formState.inputs.description.value}
         initialValid={formState.inputs.description.isValid}
