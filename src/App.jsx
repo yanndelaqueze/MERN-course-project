@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   BrowserRouter as Router,
@@ -12,6 +12,18 @@ import { MainNavigation } from "./shared/components/Navigation/MainNavigation";
 import { UserPlaces } from "./places/pages/UserPlaces";
 
 function App() {
+  // GOOGLE API KEY INJECTION TO HEAD
+  useEffect(() => {
+    const apiKey = process.env.REACT_APP_GOOGLE_API_KEY_PARAM;
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   return (
     <>
       <Router>
