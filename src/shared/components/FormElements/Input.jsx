@@ -24,16 +24,16 @@ const inputReducer = (state, action) => {
 
 export function Input(props) {
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: "",
+    value: props.initialValue || "",
     isTouched: false,
-    isValid: false,
+    isValid: props.initialValid || false,
   });
 
   const { id, onInput } = props;
   const { value, isValid } = inputState;
 
   useEffect(() => {
-    props.onInput(id, value, isValid);
+    onInput(id, value, isValid);
   }, [id, value, isValid, onInput]);
 
   function changeHandler(event) {
